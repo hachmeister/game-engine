@@ -3,16 +3,35 @@
 #include "intro_state.h"
 #include "timer.h"
 
+#include <iostream>
+
 GameEngine::GameEngine()
-  : update_interval_(40),
-    render_engine_(0),
+  : updateinterval_(40),
+    renderengine_(0),
+    inputmanager_(0),
     state_(0),
-    next_state_(0)
+    nextState_(0)
 {
 }
 
 GameEngine::~GameEngine()
 {
+  if (state_) {
+    state_->cleanup();
+    delete state_;
+  }
+  
+  if (nextState_) {
+    delete nextState_;
+  }
+  
+  if (inputmanager_) {
+    delete inputmanager_;
+  }
+  
+  if (renderengine_) {
+    delete renderengine_;
+  }
 }
 
 void GameEngine::run()
@@ -26,7 +45,7 @@ void GameEngine::run()
   running_ = true;
   
   while (running_) {
-    update_state();
+    updateState();
     
     unsigned long tmp = timer.millis();
     delta = tmp - now;
@@ -34,12 +53,14 @@ void GameEngine::run()
     
     accu += delta;
     
-    while (accu >= update_interval_) {
-      update(1000.0f/(float)update_interval_);
-      accu -= update_interval_;
+    inputmanager_->update();
+    
+    while (accu >= updateinterval_) {
+      update(1000.0f/(float)updateinterval_);
+      accu -= updateinterval_;
     }
     
-    draw((float)accu/(float)update_interval_);
+    draw((float)accu/(float)updateinterval_);
   }
 }
 
@@ -48,14 +69,29 @@ void GameEngine::exit()
   running_ = false;
 }
 
-void GameEngine::renderer(RenderEngine* render_engine)
+void GameEngine::renderengine(RenderEngine* renderengine)
 {
-  render_engine_ = render_engine;
+  renderengine_ = renderengine;
+}
+
+RenderEngine* GameEngine::renderengine()
+{
+  return renderengine_;
+}
+
+void GameEngine::inputmanager(InputManager* inputmanager)
+{
+  inputmanager_ = inputmanager;
+}
+
+InputManager* GameEngine::inputmanager()
+{
+  return inputmanager_;
 }
 
 void GameEngine::state(State* state)
 {
-  next_state_ = state;
+  nextState_ = state;
 }
 
 void GameEngine::update(float delta)
@@ -66,22 +102,22 @@ void GameEngine::update(float delta)
 void GameEngine::draw(float alpha)
 {
   state_->draw(alpha);
-  render_engine_->draw();
+  renderengine_->draw();
 }
 
-void GameEngine::update_state()
+void GameEngine::updateState()
 {
-  if (next_state_) {
-    if (next_state_ != state_) {
+  if (nextState_) {
+    if (nextState_ != state_) {
       if (state_) {
         state_->cleanup();
         delete state_;
       }
       
-      state_ = next_state_;
+      state_ = nextState_;
       state_->init();
     }
     
-    next_state_ = 0;
+    nextState_ = 0;
   }
 }

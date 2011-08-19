@@ -3,9 +3,9 @@
 #include "gameengine.h"
 #include "play_state.h"
 
+#include <iostream>
+
 IntroState::IntroState()
-  : counter_(0),
-    counter_interpolated_(0.0f)
 {
   cdata.x = 0;
   cdata.y = 0;
@@ -23,8 +23,10 @@ void IntroState::init()
   scene_ = root_->createSceneManager(Ogre::ST_GENERIC);
   camera_ = scene_->createCamera("IntroCamera");
   viewport_ = root_->getAutoCreatedWindow()->addViewport(camera_);
-  
   viewport_->setBackgroundColour(Ogre::ColourValue(1.0, 0.0, 0.0));
+  
+  InputManager* inputmanager = GameEngine::instance().inputmanager();
+  inputmanager->addKeyboardListener(this);
 }
 
 void IntroState::cleanup()
@@ -33,6 +35,9 @@ void IntroState::cleanup()
   scene_->destroyAllCameras();
   root_->getAutoCreatedWindow()->removeAllViewports();
   root_->destroySceneManager(scene_);
+  
+  InputManager* inputmanager = GameEngine::instance().inputmanager();
+  inputmanager->removeKeyboardListener(this);
 }
 
 void IntroState::update(float delta)
@@ -41,18 +46,31 @@ void IntroState::update(float delta)
   
   cdata.x++;
   cdata.y++;
-  
-  if (counter_ >= 50) {
-    GameEngine::instance()->state(new PlayState());
-  }
-  
-  counter_ = cdata.x;
 }
 
 void IntroState::draw(float alpha)
 {
   float pfac = 1.0f - alpha;
   float cfac = alpha;
+}
+
+void IntroState::keyDown(Key key)
+{
+  std::cout << "key down: " << key << std::endl;
   
-  counter_interpolated_ = (float)pdata.x * pfac + (float)cdata.x * cfac;
+  switch (key) {
+    case SPACE:
+      GameEngine::instance().state(new PlayState());
+      break;
+    case ESC:
+      GameEngine::instance().exit();
+      break;
+    default:
+      break;
+  }
+}
+
+void IntroState::keyUp(Key key)
+{
+  std::cout << "key up: " << key << std::endl;
 }

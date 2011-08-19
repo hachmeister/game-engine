@@ -23,3 +23,8 @@ void OgreRenderEngine::draw()
   Ogre::WindowEventUtilities::messagePump();
   root_->renderOneFrame();
 }
+
+Ogre::RenderWindow* OgreRenderEngine::window()
+{
+  return window_;
+}

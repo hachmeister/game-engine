@@ -4,18 +4,14 @@
 #include <OGRE/Ogre.h>
 
 #include "renderengine.h"
-#include "singleton.h"
 
-class OgreRenderEngine : public RenderEngine, public Singleton<OgreRenderEngine>
+class OgreRenderEngine : public RenderEngine
 {
-  friend class Singleton<OgreRenderEngine>;
-  
 public:
-  void draw();
-
-private:
   OgreRenderEngine();
   ~OgreRenderEngine();
+  void draw();
+  Ogre::RenderWindow* window();
   
 private:
   Ogre::Root* root_;

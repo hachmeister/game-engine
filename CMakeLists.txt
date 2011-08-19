@@ -33,8 +33,14 @@ link_directories (
 )
 
 set(HEADER_FILES
-  include/engine.h
-  include/renderer.h
+  include/gameengine.h
+  include/inputmanager.h
+  include/keybord.h
+  include/keys.h
+  include/mouse.h
+  include/ogrerenderengine.h
+  include/oisinputmanager.h
+  include/renderengine.h
   include/singleton.h
   include/state.h
   include/timer.h
@@ -42,7 +48,11 @@ set(HEADER_FILES
 
 set(SOURCE_FILES
   src/gameengine.cc
+  src/inputmanager.cc
+  src/keyboard.cc
+  src/mouse.cc
   src/ogrerenderengine.cc
+  src/oisinputmanager.cc
   src/timer.cc
 )
 
@@ -59,6 +69,7 @@ add_library(engine SHARED
 
 target_link_libraries (engine
   OgreMain
+  OIS
 )
 
 # game executable
