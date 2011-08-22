@@ -52,11 +52,11 @@ void PlayState::draw(float alpha)
   float cfac = alpha;
 }
 
-void PlayState::keyDown(Key key)
+void PlayState::keyDown(KeyboardEvent& event)
 {
-  std::cout << "key down: " << key << std::endl;
+  std::cout << "key down: " << event.key << std::endl;
   
-  switch (key) {
+  switch (event.key) {
     case ESC:
       GameEngine::instance().state(new IntroState());
       break;
@@ -65,7 +65,7 @@ void PlayState::keyDown(Key key)
   }
 }
 
-void PlayState::keyUp(Key key)
+void PlayState::keyUp(KeyboardEvent& event)
 {
-  std::cout << "key up: " << key << std::endl;
+  std::cout << "key up: " << event.key << std::endl;
 }

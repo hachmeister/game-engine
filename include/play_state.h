@@ -22,8 +22,8 @@ public:
   void cleanup();
   void update(float delta);
   void draw(float alpha);
-  void keyDown(Key key);
-  void keyUp(Key key);
+  void keyDown(KeyboardEvent& event);
+  void keyUp(KeyboardEvent& event);
   
 private:
   PlayData pdata;

@@ -56,11 +56,11 @@ Mouse OISInputManager::mouse() const
 
 bool OISInputManager::keyPressed(const OIS::KeyEvent& e)
 {
-  Key key = (Key)e.key;
+  KeyboardEvent event((Key)e.key, e.text);
   
   std::vector<KeyboardListener*>::iterator it;
   for (it = keyboardlistener_.begin(); it != keyboardlistener_.end(); ++it) {
-    (*it)->keyDown(key);
+    (*it)->keyDown(event);
   }
   
   return true;
@@ -68,11 +68,11 @@ bool OISInputManager::keyPressed(const OIS::KeyEvent& e)
 
 bool OISInputManager::keyReleased(const OIS::KeyEvent& e)
 {
-  Key key = (Key)e.key;
+  KeyboardEvent event((Key)e.key, e.text);
   
   std::vector<KeyboardListener*>::iterator it;
   for (it = keyboardlistener_.begin(); it != keyboardlistener_.end(); ++it) {
-    (*it)->keyUp(key);
+    (*it)->keyUp(event);
   }
   
   return true;

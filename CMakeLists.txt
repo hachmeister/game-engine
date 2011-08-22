@@ -25,11 +25,15 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  /usr/include/OGRE1.7
+  /home/karsten/apps/ois-1.3/include
+  /home/karsten/apps/ogre3d-1.7.3/include
+  /home/karsten/apps/cegui-0.7.5/include
 )
 
 link_directories (
-  /usr/lib/OGRE1.7
+  /home/karsten/apps/ois-1.3/lib
+  /home/karsten/apps/ogre3d-1.7.3/lib
+  /home/karsten/apps/cegui-0.7.5/lib
 )
 
 set(HEADER_FILES
@@ -70,6 +74,8 @@ add_library(engine SHARED
 target_link_libraries (engine
   OgreMain
   OIS
+  CEGUIBase
+  CEGUIOgreRenderer
 )
 
 # game executable
