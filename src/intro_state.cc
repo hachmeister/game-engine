@@ -52,6 +52,8 @@ void IntroState::init()
   
   CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
   CEGUI::System::getSingleton().setDefaultMouseCursor("TaharezLook", "MouseArrow");
+  //CEGUI::System::getSingleton().getDefaultFont()->setAutoScaled(false);
+  //CEGUI::System::getSingleton().getDefaultFont()->setNativeResolution(Size(1024, 768));
   CEGUI::WindowManager& winMgr = CEGUI::WindowManager::getSingleton();
   CEGUI::DefaultWindow* root = (CEGUI::DefaultWindow*)winMgr.createWindow("DefaultWindow", "Root");
   CEGUI::System::getSingleton().setGUISheet(root);
@@ -62,6 +64,9 @@ void IntroState::init()
   wnd->setMaxSize(CEGUI::UVector2(cegui_reldim(1.0f), cegui_reldim( 1.0f)));
   wnd->setMinSize(CEGUI::UVector2(cegui_reldim(0.1f), cegui_reldim( 0.1f)));
   wnd->setText("Hello World!");
+  
+  CEGUI::Size size = CEGUI::System::getSingleton().getDefaultFont()->getNativeResolution();
+  std::cout << "size: " << size.d_width << "," << size.d_height << std::endl;
 }
 
 void IntroState::cleanup()
@@ -94,12 +99,28 @@ void IntroState::keyDown(KeyboardEvent& event)
 {
   std::cout << "key down: " << event.key << std::endl;
   
+  CEGUI::WindowManager& winMgr = CEGUI::WindowManager::getSingleton();
   switch (event.key) {
     case SPACE:
       GameEngine::instance().state(new PlayState());
       break;
     case ESC:
       GameEngine::instance().exit();
+      break;
+    case NUM1:
+      ((CEGUI::FrameWindow*)winMgr.getWindow("Demo Window"))->getTitlebar()->setFont("PTSansNarrowBold-9");
+      break;
+    case NUM2:
+      ((CEGUI::FrameWindow*)winMgr.getWindow("Demo Window"))->getTitlebar()->setFont("PTSansNarrowBold-10");
+      break;
+    case NUM3:
+      ((CEGUI::FrameWindow*)winMgr.getWindow("Demo Window"))->getTitlebar()->setFont("PTSansNarrowBold-11");
+      break;
+    case NUM4:
+      ((CEGUI::FrameWindow*)winMgr.getWindow("Demo Window"))->getTitlebar()->setFont("PTSansNarrowBold-12");
+      break;
+    case NUM5:
+      ((CEGUI::FrameWindow*)winMgr.getWindow("Demo Window"))->getTitlebar()->setFont("PTSansNarrowBold-13");
       break;
     default:
       break;
@@ -120,18 +141,24 @@ void IntroState::keyUp(KeyboardEvent& event)
 
 void IntroState::mouseMoved(MousePositionEvent& event)
 {
+  std::cout << "mouse moved: " << event.x << "," << event.y << std::endl;
+  
   CEGUI::System& cegui = CEGUI::System::getSingleton();
   cegui.injectMousePosition(event.x, event.y);
 }
 
 void IntroState::mouseDown(MouseButtonEvent& event)
 {
+  std::cout << "mouse down: " << event.button << std::endl;
+  
   CEGUI::System& cegui = CEGUI::System::getSingleton();
   cegui.injectMouseButtonDown(convertMouseButtonToCegui(event.button));
 }
 
 void IntroState::mouseUp(MouseButtonEvent& event)
 {
+  std::cout << "mouse up: " << event.button << std::endl;
+  
   CEGUI::System& cegui = CEGUI::System::getSingleton();
   cegui.injectMouseButtonUp(convertMouseButtonToCegui(event.button));
 }

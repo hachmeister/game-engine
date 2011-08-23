@@ -31,6 +31,10 @@ void OISInputManager::init(size_t windowHnd)
   ois_keyboard_->setEventCallback(this);
   ois_mouse_ = static_cast<OIS::Mouse*>(ois_inputmanager_->createInputObject(OIS::OISMouse, true));
   ois_mouse_->setEventCallback(this);
+  
+  const OIS::MouseState& mouseState = ois_mouse_->getMouseState();
+  mouseState.width = 1024;
+  mouseState.height = 768;
 }
 
 void OISInputManager::update()
@@ -80,15 +84,36 @@ bool OISInputManager::keyReleased(const OIS::KeyEvent& e)
 
 bool OISInputManager::mouseMoved(const OIS::MouseEvent& e)
 {
+  MousePositionEvent event(e.state.X.abs, e.state.Y.abs);
+  
+  std::vector< ::MouseListener*>::iterator it;
+  for (it = mouselistener_.begin(); it != mouselistener_.end(); ++it) {
+    (*it)->mouseMoved(event);
+  }
+  
   return true;
 }
 
 bool OISInputManager::mousePressed(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+  MouseButtonEvent event(id);
+  
+  std::vector< ::MouseListener*>::iterator it;
+  for (it = mouselistener_.begin(); it != mouselistener_.end(); ++it) {
+    (*it)->mouseDown(event);
+  }
+  
   return true;
 }
 
 bool OISInputManager::mouseReleased(const OIS::MouseEvent& e, OIS::MouseButtonID id)
 {
+  MouseButtonEvent event(id);
+  
+  std::vector< ::MouseListener*>::iterator it;
+  for (it = mouselistener_.begin(); it != mouselistener_.end(); ++it) {
+    (*it)->mouseUp(event);
+  }
+  
   return true;
 }
